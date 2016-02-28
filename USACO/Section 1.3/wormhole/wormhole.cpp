@@ -4,7 +4,8 @@ PROG: wormhole
 LANG: C++
 */
 
-//用recursion来实现多层循环
+//用递归来实现多层循环
+//有回路的检测
 
 #include <iostream>
 #include <fstream>
@@ -41,7 +42,7 @@ int main()
 		{
 			if (wormholes[j].y == wormholes[i].y && wormholes[j].x > wormholes[i].x)
 			{
-				if (nextOnRight[i] == 0 || wormholes[j].x < wormholes[nextOnRight[i]].x)
+				if (nextOnRight[i] == 0 || wormholes[j].x < wormholes[nextOnRight[i]].x)//初始情况的归一化处理
 					nextOnRight[i] = j;
 			}
 		}
