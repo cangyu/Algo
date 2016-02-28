@@ -3,6 +3,11 @@ ID: yhcy1991
 PROG: combo
 LANG: C++
 */
+
+//可以枚举重叠的部分再减去，但换个角度可发现重叠部分由3块组成，乘法原理；
+//可将重叠部分看成是由两块组成 : 中间重叠的部分 + 两端因环型而重叠的部分，根据间距找规律
+//计算每对数重叠的部分时也可用一个N长的数组来标记
+
 #include <iostream>
 #include <fstream>
 #include <vector>

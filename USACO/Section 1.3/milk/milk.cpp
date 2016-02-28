@@ -3,6 +3,9 @@ ID: yhcy1991
 PROG: milk
 LANG: C++
 */
+
+//或者利用输入的性质，将单价相同的milk放到一起，以单价作为数组的下标，线性solution
+
 #include <iostream>
 #include <fstream>
 #include <string>

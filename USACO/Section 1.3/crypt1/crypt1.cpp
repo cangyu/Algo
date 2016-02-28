@@ -4,6 +4,8 @@ PROG: crypt1
 LANG: C++
 */
 
+//穷举，构造简单的hash表来检测数位
+
 #include <iostream>
 #include <fstream>
 #include <string>

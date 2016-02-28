@@ -3,6 +3,7 @@ ID: yhcy1991
 PROG: barn1
 LANG: C++
 */
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -39,7 +40,7 @@ int main()
 
 	sort(gaps.begin(), gaps.end(),gapCmp);
 
-	int cnt_boards = min(m - 1, c - 1);
+	int cnt_boards = min(m - 1, c - 1);//注意最后木板数量的选择
 	
 	for (int i = 0; i < cnt_boards; i++)
 		sum -= gaps[i];
