@@ -7,11 +7,17 @@ LANG: C++
 #include <fstream>
 #include<algorithm>
 
+//Trade memory for speed
+//查找的时候有hash的思维去找，而不是scan
+
 using namespace std;
 
-int bisquare[250 * 250 + 1] = { 0 };
-int hasExist[250 * 250 + 1] = { 0 };
+const int MAX_NUM = 2 * 250 * 250 + 1;
 
+int bisquare[MAX_NUM] = { 0 };
+int numMark[MAX_NUM] = { 0 };
+int gap[MAX_NUM] = { 0 };
+int gapMark[MAX_NUM] = { 0 };
 
 int main()
 {
@@ -22,56 +28,57 @@ int main()
 	fin >> n >> m;
 	fin.close();
 
-	int k = 0;
 	for (int p = 0; p <= m; p++)
-		for (int q = 0; q <= m; q++)
-		{
-			int temp = p*p + q*q;
-			if (hasExist[temp] == 0)
-			{
-				hasExist[temp] = 1;
-				bisquare[k++] = temp;
-			}
-		}
+		for (int q = p; q <= m; q++)
+			numMark[p*p + q*q] = 1;
 
-	sort(bisquare, bisquare + k);
+	int numCnt = 0;
+	for (int i = 0; i < MAX_NUM; i++)
+		if (numMark[i])
+			bisquare[numCnt++] = i;
+
+	for (int i = 1; i < numCnt; i++)
+		for (int j = 0; j < i; j++)
+			gapMark[bisquare[i] - bisquare[j]] = 1;
+
+	//fout << numCnt << endl;
+
+	int gapCnt = 0;
+	for (int i = 0; i < MAX_NUM; i++)
+		if (gapMark[i])
+			gap[gapCnt++] = i;
+
+	//fout << gapCnt << endl;
 
 	int validCnt = 0;
-
-	for (int gap = 1; gap <= 2 * m*m / (n - 1); gap++)
+	for (int i = 0; i < gapCnt; i++)
 	{
-		for (int i = 0; i < k; i++)
+		for (int j = 0; j < numCnt; j++)
 		{
-			if (bisquare[i] + (n - 1)*gap>bisquare[k - 1])
-				break;
-			else if (i + n - 1 >= k)
+			if (bisquare[j] + (n - 1)*gap[i]>bisquare[numCnt - 1])
 				break;
 			else
 			{
-				int cnt = 0;
-				int j = 0;
-				while (i + j < k)
-				{
-					if (bisquare[i + j] - bisquare[i] == cnt*gap)
+				int flag = 1;
+				for (int k = 1; k < n; k++)
+					if (numMark[bisquare[j] + k*gap[i]] == 0)//nice!
 					{
-						cnt++;
-						if (cnt == n)
-							break;
+						flag = 0;
+						break;
 					}
-					j++;
-				}
-				if (cnt == n)
+				if (flag)
 				{
-					fout << bisquare[i] << ' ' << gap << endl;
+					fout << bisquare[j] << ' ' << gap[i] << endl;
 					validCnt++;
 				}
+
 			}
 		}
 	}
 
 	if (validCnt == 0)
 		fout << "NONE" << endl;
-
+	
 	fout.close();
 	return 0;
 }
