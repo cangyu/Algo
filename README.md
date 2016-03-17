@@ -1,4 +1,4 @@
-My recordings when studying data structure and algorithm:
+My recordings when studying data structure and algorithm.
 
 SJTU: Solutions for problems stated on the OnlineJudge of Shanghai Jiaotong University.
 
