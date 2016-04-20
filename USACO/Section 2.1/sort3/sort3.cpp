@@ -5,10 +5,8 @@ LANG: C++
 */
 #include <iostream>
 #include <fstream>
-#include <cstring>
 #include <algorithm>
-#include <ctime>
-#include <cstdlib>
+#include <cmath>
 
 using namespace std;
 
@@ -19,7 +17,7 @@ int main()
 
 	int a[1005], b[1005];
 	int c[4][4] = { 0 };
-	int n;
+	int n, ans = 0;
 
 	fin >> n;
 
@@ -33,8 +31,16 @@ int main()
 
 	for (int i = 0; i < n; i++)
 	{
-
+		if (a[i] != b[i])
+			c[a[i]][b[i]]++;
 	}
+
+	ans += min(c[1][2], c[2][1]);
+	ans += min(c[2][3], c[3][2]);
+	ans += min(c[3][1], c[1][3]);
+	ans += 2 * abs(c[1][2] - c[2][1]);
+
+	fout << ans << endl;
 
 	fin.close();
 	fout.close();
