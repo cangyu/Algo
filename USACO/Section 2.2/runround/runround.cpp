@@ -15,7 +15,7 @@ int a[10], place[10], times[10];
 
 bool check(long long x);
 
-int main(int argc, char **argv)
+int main(int argc, char **argv)//这种做法是check的思维，也可以从generate的角度来考虑
 {
 	freopen("runround.in", "r", stdin);
 	freopen("runround.out", "w", stdout);
