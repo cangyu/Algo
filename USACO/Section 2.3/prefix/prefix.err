@@ -1,0 +1,8 @@
+pCnt=5
+NO. 0 primitive is: A , and the length is: 1
+NO. 1 primitive is: AB , and the length is: 2
+NO. 2 primitive is: BA , and the length is: 2
+NO. 3 primitive is: CA , and the length is: 2
+NO. 4 primitive is: BBC , and the length is: 3
+sLen=12
+ABABACABAABC
