@@ -7,9 +7,7 @@ LANG: C++
 #include <fstream>
 #include <cstring>
 #include <cstdio>
-#include <cassert>
 #include <algorithm>
-#include <iomanip>
 #include <queue>
 
 using namespace std;
@@ -18,20 +16,24 @@ struct point
 {
 	int x, y;
 	bool hasWall[4];
-	int step;
+	int step[2];
 	bool hasVisited;
-	point() :x(-1), y(-1), step(0), hasVisited(false) { fill_n(hasWall, 4, false); }
+	point() :x(-1), y(-1), hasVisited(false) 
+	{
+		fill_n(hasWall, 4, false); 
+		fill_n(step, 2, 0);
+	}
 };
 
 const int dx[4] = { -1,0,1,0 };
 const int dy[4] = { 0,1,0,-1 };
 
 int w = 0, h = 0;
-int maze[80][205] = { 0 };
-point map[40][105];
+int maze[205][80] = { 0 };//注意行列顺序！！！
+point map[105][40];
 int out_pos[2][2] = { 0 };
 
-int bfs(int x, int y);
+void bfs(int x, int y, int round);
 
 int main(int argc, char **argv)
 {
@@ -43,6 +45,8 @@ int main(int argc, char **argv)
 	memset(out_pos, 0, sizeof(out_pos));
 	const int n = 2 * h + 1, m = 2 * w + 1;
 	int out_cnt = 0;
+
+	/* Input the maze */
 	char c = getchar();
 	for (int i = 0; i < n; i++)
 	{
@@ -62,6 +66,7 @@ int main(int argc, char **argv)
 		c = getchar();
 	}
 
+	/* Construct the map */
 	for (int i = 1; i <= h; i++)
 	{
 		for (int j = 1; j <= w; j++)
@@ -78,51 +83,40 @@ int main(int argc, char **argv)
 		}
 	}
 
-	int res = 4000;
-
+	/* BFS */
 	for (int i = 0; i < 2; i++)
 	{
 		for (int u = 1; u <= h; u++)
-		{
 			for (int v = 1; v <= w; v++)
-			{
-				map[u][v].step = 0;
 				map[u][v].hasVisited = false;
-			}
-		}
+
 		int startX = max((out_pos[i][0] + 1) / 2, 1);//在上边界有出口时，转换后的x坐标至少要为1
 		int startY = max((out_pos[i][1] + 1) / 2, 1);//在左边界有出口时，转换后的y坐标至少要为1
 
-		res = min(res, bfs(startX, startY));
-
-		/*
-		for (int u = 1; u <= h; u++)
-		{
-			for (int v = 1; v <= w; v++)
-				cerr << setw(3) << map[u][v].step;
-			cerr << endl;
-		}
-		*/
+		bfs(startX, startY, i);
 	}
 
-	cout << res << endl;
+	/* Output */
+	int res = 0;
+	for (int u = 1; u <= h; u++)
+		for (int v = 1; v <= w; v++)
+			res = max(res, min(map[u][v].step[0], map[u][v].step[1]));
 
+	cout << res << endl;
 	return 0;
 }
 
-int bfs(int x, int y)
+void bfs(int x, int y, int round)
 {
-	map[x][y].step = 1;
+	map[x][y].step[round] = 1;
 	map[x][y].hasVisited = true;
 
-	int mCnt = 0;
 	queue<point> q;
 	q.push(map[x][y]);
 	while (!q.empty())
 	{
 		point t = q.front();
 		q.pop();
-		mCnt = max(mCnt, t.step);
 		for (int dir = 0; dir < 4; dir++)
 		{
 			if (map[t.x][t.y].hasWall[dir])
@@ -135,9 +129,8 @@ int bfs(int x, int y)
 				continue;
 
 			map[nextX][nextY].hasVisited = true;
-			map[nextX][nextY].step = t.step + 1;
+			map[nextX][nextY].step[round] = t.step[round] + 1;
 			q.push(map[nextX][nextY]);
 		}
 	}
-	return mCnt;
 }
