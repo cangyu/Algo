@@ -7,13 +7,17 @@ LANG: C++
 #include <iostream>
 #include <cstdio>
 #include <algorithm>
+#include <bitset>
 
 using namespace std;
 
 int k, n;
 int v[52] = { 0 };
 
-bool check(int num, int cnt);
+bitset<2000008> f;
+bitset<2000008> tmp;
+
+void generate(int cnt);
 
 int main(int argc, char **argv)
 {
@@ -22,32 +26,41 @@ int main(int argc, char **argv)
 
 	cin >> k >> n;
 	for (int i = 0; i < n; i++)
+	{
 		cin >> v[i];
-
+		f.set(v[i]);
+	}
 	sort(v, v + n);
+	int min_postage = v[0];
 	int max_postage = k*v[n - 1];
-	int i = 0;
-	while (i <= max_postage && check(i, k))
+
+	if (min_postage != 1)
+	{
+		cout << 0 << endl;
+		return 0;
+	}
+
+	for (int cnt = 2; cnt <= k; cnt++)
+		generate(cnt);
+	
+	int i = 1;
+	while (i<=max_postage && f.test(i))
 		i++;
 
 	cout << i - 1 << endl;
-
 	return 0;
 }
 
-bool check(int num, int cnt)
+void generate(int round)
 {
-	if (num < 0 || cnt < 0)
-		return false;
-	else if (num == 0)
-		return true;
-	else if (num > 0 && cnt == 0)
-		return false;
-	else
+	tmp.reset();
+	for (int i = 0; i < n; i++)
 	{
-		bool ans = false;
-		for (int i = 0; i < n; i++)
-			ans |= check(num - v[i], cnt - 1);
-		return ans;
+		for (int j = 1; j <= (round - 1)*v[n - 1]; j++)
+		{
+			if (f.test(j) && !f.test(j + v[i]))
+				tmp.set(j + v[i]);
+		}
 	}
+	f |= tmp;
 }
