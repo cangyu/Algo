@@ -7,60 +7,43 @@ LANG: C++
 #include <iostream>
 #include <cstdio>
 #include <algorithm>
-#include <bitset>
 
 using namespace std;
 
 int k, n;
 int v[52] = { 0 };
+int f[2000004] = { 0 };
 
-bitset<2000008> f;
-bitset<2000008> tmp;
-
-void generate(int cnt);
-
-int main(int argc, char **argv)
+int main(int argc, char **argv)//从数的顺序来考虑，而不是从票的顺序，否则会有很多无谓的计算，并且在置标志位的时候会有耦合的情况，很麻烦
 {
 	freopen("stamps.in", "r", stdin);
 	freopen("stamps.out", "w", stdout);
 
 	cin >> k >> n;
 	for (int i = 0; i < n; i++)
-	{
 		cin >> v[i];
-		f.set(v[i]);
-	}
+
 	sort(v, v + n);
-	int min_postage = v[0];
-	int max_postage = k*v[n - 1];
-
-	if (min_postage != 1)
-	{
-		cout << 0 << endl;
-		return 0;
-	}
-
-	for (int cnt = 2; cnt <= k; cnt++)
-		generate(cnt);
-	
-	int i = 1;
-	while (i<=max_postage && f.test(i))
-		i++;
-
-	cout << i - 1 << endl;
-	return 0;
-}
-
-void generate(int round)
-{
-	tmp.reset();
+	const int max_postage = k*v[n - 1];
 	for (int i = 0; i < n; i++)
+		f[v[i]] = 1;
+
+	int w = 1;
+	while (w <= max_postage)
 	{
-		for (int j = 1; j <= (round - 1)*v[n - 1]; j++)
+		if (f[w] == 0 || f[w] > k)
+			break;
+
+		for (int i = 0; i < n; i++)
 		{
-			if (f.test(j) && !f.test(j + v[i]))
-				tmp.set(j + v[i]);
+			if (f[w + v[i]] == 0)
+				f[w + v[i]] = f[w] + 1;
+			else
+				f[w + v[i]] = min(f[w + v[i]], f[w] + 1);
 		}
+		w++;
 	}
-	f |= tmp;
+
+	cout << w - 1 << endl;
+	return 0;
 }
