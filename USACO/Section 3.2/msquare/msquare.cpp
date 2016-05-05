@@ -28,14 +28,14 @@ int target[8] = { 0 };
 bool hasGenerated[40320 + 4];
 
 const int fac[9] = { 1,1,2,6,24,120,720,5040,40320 };
-bool flag[8] = { false };
+bool flag[9] = { false };
 
 int cantor(int s[]);
 node A_trans(const node &src);
 node B_trans(const node &src);
 node C_trans(const node &src);
 
-int main(int argc, char **argv)
+int main(int argc, char **argv)//BFS搜索，有点从generate的角度考虑的意思，用康托展开来做hash，将每个排列映射到其序号上
 {
 	freopen("msquare.in", "r", stdin);
 	freopen("msquare.out", "w", stdout);
@@ -80,19 +80,37 @@ int main(int argc, char **argv)
 	return 0;
 }
 
+//两种计算cantor展开的方法，一个是用数组标记已经找过的，另一个是从当前向后找比它小的
+
+/*
 int cantor(int s[])
 {
 	int ans = 0;
-	fill_n(flag, 8, false);
-	for (int i = 0; i < 8-1; i++)
+	fill_n(flag, sizeof(flag) / sizeof(bool), false);
+	for (int i = 0; i < 7; i++)
 	{
 		int cnt = s[i] - 1;
 		for (int j = 1; j < s[i]; j++)
-			if (flag[i])
+			if (flag[j])//be careful!!!
 				cnt--;
 
 		ans += cnt*fac[7 - i];
 		flag[s[i]] = true;
+	}
+	return ans + 1;
+}
+*/
+
+int cantor(int s[])
+{
+	int ans = 0;
+	for (int i = 0; i < 7; i++)
+	{
+		int cnt = 0;
+		for (int j = i + 1; j < 8; j++)
+			if (s[j] < s[i])
+				cnt++;
+		ans += cnt*fac[7 - i];
 	}
 	return ans + 1;
 }
