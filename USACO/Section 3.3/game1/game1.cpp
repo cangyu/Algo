@@ -20,7 +20,10 @@ int n = 0;
 int sum[201][201] = { 0 };
 int dp[201][201][2] = { 0 };
 
-int main(int argc, char **argv)//根据先手和后手dp
+/**
+  * 根据先手和后手dp, 注意两者之和一定为sum 
+  */
+int main(int argc, char **argv) 
 {
 	freopen("game1.in", "r", stdin);
 	freopen("game1.out", "w", stdout);
