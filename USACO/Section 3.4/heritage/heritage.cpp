@@ -74,12 +74,10 @@ node *reconstruct(int in_start, int in_end, int pre_start, int pre_end)
 	}
 	else
 	{
-		int t = -1;
-		for (int i = in_start; i < k; i++)//坑爹啊！！！
-			t = max(t, pre_rev[in[i] - 'A']);
+		int llen = k - in_start;//果然之前SB了，看长度就能确定最后一位了
 
-		cur->left = reconstruct(in_start, k - 1, pre_start + 1, t);
-		cur->right = reconstruct(k + 1, in_end, t + 1, pre_end);
+		cur->left = reconstruct(in_start, k - 1, pre_start + 1, pre_start + llen);
+		cur->right = reconstruct(k + 1, in_end, pre_start + llen + 1, pre_end);
 	}
 
 	return cur;
