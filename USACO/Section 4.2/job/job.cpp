@@ -44,7 +44,7 @@ int main(int argc, char **argv)
 		ea[mi] = mt;
 	}
 
-	for (int i = 1; i <= n; i++)//同样方法处理b
+	for (int i = 1; i <= n; i++) //同样方法处理b
 	{
 		int mj = -1, mt = 2147483647;
 		for (int j = 1; j <= m2; j++)
