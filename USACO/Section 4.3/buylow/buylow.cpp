@@ -1,8 +1,4 @@
-/*
-ID: yhcy1991
-PROG: buylow
-LANG: C++
-*/
+
 
 #include <iostream>
 #include <ostream>
@@ -270,19 +266,6 @@ int main(int argc, char **argv)
 		}
 	}
 
-	c[n] = 1;
-	for (int i = n - 1; i >= 1; i--)
-	{
-		const int last = post[i] != 0 ? post[i] - 1 : n;
-		for (int j = i + 1; j <= last; j++)
-		{
-			if (a[i] > a[j] && f[j] == f[i] - 1)
-				c[i] = c[i] + c[j];
-		}
-		if (c[i].cmp(hpNum(0)) == 0)
-			c[i] = 1;
-	}
-
 	int maxIndex = 0, fmax = -1;
 	for (int i = 1; i <= n; i++)
 	{
@@ -292,9 +275,29 @@ int main(int argc, char **argv)
 			maxIndex = i;
 		}
 	}
+
+	for (int i = n ; i >= 1; i--)
+	{
+		if (post[i] == 0 && f[i] == 1)
+			c[i] = 1;
+		else
+		{
+			const int last = post[i] != 0 ? post[i] - 1 : n;
+
+			for (int j = i + 1; j <= last; j++)
+			{
+				if (a[i] > a[j] && f[j] == f[i] - 1)
+					c[i] = c[i] + c[j];
+			}
+
+			/*
+			if (c[i].len == 2 && c[i].s[2] == 0)
+				cerr << "unusual!" << endl;
+			*/
+		}
+	}
 	
 	hpNum ans(0);
-
 	for (int i = 1; i <= n; i++)
 	{
 		if (f[i] == fmax)
