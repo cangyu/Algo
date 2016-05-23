@@ -1,249 +1,96 @@
-
+/*
+ID: yhcy1991
+PROG: buylow
+LANG: C++
+*/
 
 #include <iostream>
 #include <ostream>
-#include <cstdio>
 #include <algorithm>
+#include <cstdio>
 #include <cstring>
 
 using namespace std;
 
-const int maxlen = 20;
+const int maxLen = 108;
 
-class hpNum
+class HP//高精度的类，果然许多事情还是要靠自己，套别人的模板还是不如自己面向数据编程......
 {
-public:
+private:
 	int len;
-	int s[maxlen];
+	int digit[maxLen];
 
-	hpNum() :len(1){ memset(s, 0, sizeof(s)); }
-	hpNum(int inte)
+public:
+	HP() :len(1) { memset(digit, 0, sizeof(digit)); }
+	HP(const HP &rhs) :len(rhs.len)
 	{
-		memset(s, 0, sizeof(s));
-		*this = inte; 
-	}
-	hpNum(const char *str)
-	{
-		memset(s, 0, sizeof(s));
-		*this = str; 
-	}
-	hpNum(const hpNum &rhs) :len(rhs.len)
-	{
-		memset(s, 0, sizeof(s));
-		memcpy(s, rhs.s, sizeof(s));
+		memset(digit, 0, sizeof(digit));
+		memcpy(digit, rhs.digit, (len+1)*sizeof(int));
 	}
 
-	friend ostream & operator<<(ostream& out, const hpNum &x);
-	
-	hpNum operator=(int inte);
-	hpNum operator=(const char *str);
-	hpNum operator+(const hpNum &rhs);
-	hpNum operator-(const hpNum &rhs);
-	hpNum operator*(const hpNum &rhs);
-	hpNum operator/(const hpNum &rhs);
-	hpNum operator%(const hpNum &rhs);
+	int getDigit(int n) const { return digit[n]; }
+	void setDigit(int n, int t) { digit[n] = t; }
+	int getLen() const { return len; }
+	void setLen(int l) { len = l; }
 
-	int cmp(const hpNum &rhs);
-};
-
-ostream & operator<<(ostream &out, const hpNum  &x)
-{
-	for (int i = x.len; i >= 1; i--)
-		out << x.s[i];
-	return out;
-}
-
-hpNum hpNum::operator=(int inte)
-{
-	if (inte == 0)
+	HP& operator=(int num)
 	{
 		len = 1;
-		s[1] = 0;
+		memset(digit, 0, sizeof(digit));
+		
+		while (num)
+		{
+			digit[len++] = num % 10;
+			num /= 10;
+		}
+		len = max(1, len - 1);
 		return *this;
 	}
 
-	len = 0;
-	while (inte > 0)
+	HP& operator+=(const HP &rhs)
 	{
-		s[++len] = inte % 10;
-		inte /= 10;
-	}
-	return *this;
-}
-
-hpNum hpNum::operator=(const char *str)
-{
-	len = strlen(str);
-	for (int i = 1; i <= len; i++)
-		s[i] = str[len - i] - '0';
-	return *this;
-}
-
-hpNum hpNum::operator+(const hpNum &rhs)
-{
-	int i = 1;
-	hpNum c;
-
-	while (i <= len || i <= rhs.len || c.s[i])
-	{
-		if (i <= len)
-			c.s[i] += s[i];
-		if (i <= len)
-			c.s[i] += rhs.s[i];
-
-		c.s[i + 1] = c.s[i] / 10;
-		c.s[i] %= 10;
-
-		i++;
-	}
-	
-	c.len = max(1, i - 1);
-	return c;
-}
-
-hpNum hpNum::operator-(const hpNum &rhs)
-{
-	int i, j;
-	hpNum c;
-
-	for (i = 1, j = 0; i <= len; i++)// no handling of negative results?
-	{
-		c.s[i] = s[i] - j;
-		if (i <= rhs.len)
-			c.s[i] -= rhs.s[i];
-		if (c.s[i] < 0)
+		int i = 1, carry = 0;
+		while (i <= rhs.len)
 		{
-			j = 1;
-			c.s[i] += 10;
+			digit[i] += carry + rhs.digit[i];
+			carry = digit[i] / 10;
+			digit[i] %= 10;
+			i++;
 		}
-		else
-			j = 0;
-	}
 
-	c.len = len;
-	while (c, len > 1 && c.s[c, len] == 0)
-		c.len--;
-
-	return c;
-}
-
-hpNum hpNum::operator*(const hpNum &rhs)
-{
-	int i, j;
-	hpNum c;
-
-	c.len = len + rhs.len;
-
-	for (i = 1; i <= c.len; i++)
-		c.s[i] = 0;
-
-	for ( i = 1; i <= len; i++)
-		for (j = 1; j <= rhs.len; j++)
-			c.s[i + j - 1] += s[i] * rhs.s[j];
-
-	for (i = 1; i < c.len; i++)
-	{
-		c.s[i + 1] += c.s[i] / 10;
-		c.s[i] %= 10;
-	}
-
-	while (c.s[i])
-	{
-		c.s[i + 1] = c.s[i] / 10;
-		c.s[i] %= 10;
-		i++;
-	}
-
-	while (i > 1 && c.s[i] == 0)
-		i--;
-
-	c.len = i;
-	return c;
-}
-
-hpNum hpNum::operator/(const hpNum &rhs)
-{
-	int i, j;
-	hpNum c, d(0);
-
-	for (i = len; i > 0; i--)
-	{
-		if (!(d.len == 1 && d.s[1] == 0))
+		while (carry)
 		{
-			for (j = d.len; j > 0; j--)
-				d.s[j + 1] = d.s[j];
-			++d.len;
+			digit[i] += carry;
+			carry = digit[i] / 10;
+			digit[i] %= 10;
+			i++;
 		}
-		d.s[1] = s[i];
-		c.s[i] = 0;
-		while ((j = d.cmp(rhs)) >= 0)
-		{
-			d = d - rhs;
-			c.s[i]++;
-			if (j == 0)
-				break;
-		}
+
+		len = max(i - 1, len);
+
+		return *this;
 	}
-	c.len = len;
-	while ((c.len > 1 && c.s[c.len] == 0))
-		c.len--;
+};
 
-	return c;
-}
+const int maxCnt = 5004;
+int n = 0;
+int a[maxCnt] = { 0 };
+int f[maxCnt] = { 0 };
+int post[maxCnt] = { 0 };
+HP c[maxCnt];
 
-hpNum hpNum::operator%(const hpNum &rhs)
-{
-	int i, j;
-	hpNum d(0);
-	for (i = len; i > 0; i--)
-	{
-		if (!(d.len == 1 && d.s[1] == 0))
-		{
-			for (j = d.len; j > 0; j--)
-				d.s[j + 1] = d.s[j];
-			++d.len;
-		}
-		d.s[1] = s[i];
-		while ((j = d.cmp(rhs)) >= 0)
-		{
-			d = d - rhs;
-			if (j == 0)
-				break;
-		}
-	}
+ostream & operator<<(ostream &out, const HP &rhs);
 
-	return d;
-}
-
-int hpNum::cmp(const hpNum &rhs)
-{
-	if (len != rhs.len)
-		return len > rhs.len ? 1 : -1;
-
-	int i = len;
-	while (i > 1 && s[i] == rhs.s[i])
-		i--;
-	return s[i] - rhs.s[i];
-}
-
-int n;
-int a[5004] = { 0 };
-int post[5004] = { 0 };
-int f[5004] = { 0 };
-hpNum c[5004];
-
-using namespace std;
-
-int main(int argc, char **argv) 
+int main(int argc, char** argv)
 {
 	freopen("buylow.in", "r", stdin);
 	freopen("buylow.out", "w", stdout);
 
-	scanf("%d", &n);
+	cin >> n;
 	for (int i = 1; i <= n; i++)
-		scanf("%d", a + i);
+		cin >> a[i];
 
-	for (int i = 1; i <= n - 1; i++)
+	for (int i = 1; i <= n; i++)
 	{
 		for (int j = i + 1; j <= n; j++)
 		{
@@ -255,55 +102,47 @@ int main(int argc, char **argv)
 		}
 	}
 
-	fill_n(f, sizeof(f) / sizeof(int), 1);
-
-	for (int i = n - 1; i >= 1; i--)
+	int fmax = -1;
+	fill(f, f + sizeof(f) / sizeof(int), 1);
+	for (int i = n; i >=1; i--)//DP找最长下降子序列，可以从前往后，也可以从后往前
 	{
-		for (int k = i + 1; k <= n; k++)
+		for (int j = i + 1; j <= n; j++)
 		{
-			if (a[i] > a[k])
-				f[i] = max(f[i], 1 + f[k]);
+			if (a[i] > a[j])
+				f[i] = max(f[i], 1 + f[j]);
 		}
+		fmax = max(fmax, f[i]);
 	}
 
-	int maxIndex = 0, fmax = -1;
-	for (int i = 1; i <= n; i++)
+	for (int i = n; i >=1; i--)//关键在于如何避免重复，只取unique的部分！！！
 	{
-		if (f[i] > fmax)
-		{
-			fmax = f[i];
-			maxIndex = i;
-		}
-	}
-
-	for (int i = n ; i >= 1; i--)
-	{
-		if (post[i] == 0 && f[i] == 1)
+		if (post[i] == 0 && f[i] == 1)//仅在是最小single时才置为1
 			c[i] = 1;
-		else
+		else//将整个序列分成不重叠的片段，一段段地累计独立的序列，最后累加即可！
 		{
-			const int last = post[i] != 0 ? post[i] - 1 : n;
-
+			int last = post[i] != 0 ? post[i] - 1 : n;
 			for (int j = i + 1; j <= last; j++)
 			{
 				if (a[i] > a[j] && f[j] == f[i] - 1)
-					c[i] = c[i] + c[j];
+					c[i] += c[j];
 			}
-
-			/*
-			if (c[i].len == 2 && c[i].s[2] == 0)
-				cerr << "unusual!" << endl;
-			*/
 		}
 	}
-	
-	hpNum ans(0);
+
+	HP ans;
 	for (int i = 1; i <= n; i++)
 	{
 		if (f[i] == fmax)
-			ans = ans + c[i];
+			ans += c[i];
 	}
-	
+
 	cout << fmax << ' ' << ans << endl;
 	return 0;
+}
+
+ostream & operator<<(ostream &out, const HP &rhs)
+{
+	for (int i = rhs.getLen(); i >= 1; i--)
+		out << rhs.getDigit(i);
+	return out;
 }
