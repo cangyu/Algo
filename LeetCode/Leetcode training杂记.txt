@@ -1,0 +1,25 @@
+//Deeper thoughts
+10--dp处理匹配，好！
+18--do it with dfs to handle k-sum?
+
+//Notes
+1. Two Sum--注意顺序，防止a=b的情况，用hash来找counterpart
+2. Add Two Numbers--常规的链表操作， 写法类似归并
+3. Longest Substring Without Repeating Characters--hash思维！！！，简单而快速找到下一步的开始点，初始化值的选择
+4. Median of Two Sorted Arrays--关键是对k做二分，每次去掉一般左右的元素，注意递归的corner case
+5. Longest Palindromic Substring--从中点考虑，向两边寻找，注意边界和重复元素
+6. ZigZag Conversion--模拟，每numRows-1个元素转弯，注意corner case：其一是只有一行，其二是输入为空串
+7. Reverse Integer--注意整型正负极值的范围不同
+8. String to Integer (atoi)--先去掉空格，再判断符号，注意处理越界
+9. Palindrome Number--通用的方法，从两边同步判断，注意终止条件，用除法来取最高位
+10. Regular Expression Matching--关键是处理‘*’，可以用递归，也可以用dp，nice problem！
+11. Container With Most Water--分析当长度减少后该移动哪边，移动长的一边没任何卵用，移动短的一边或许还有希望
+12. Integer to Roman--hash！！！
+13. Roman to Integer--以5、50、500为分界判断
+14. Longest Common Prefix--too naive
+15. 3Sum--排序+两指针，O(N^2)，貌似没别的好方法了，注意在移动左右游标时的边界，在符合情况要去到重复时首先要离开自身
+16. 3Sum Closest--还是两指针
+17. Letter Combinations of a Phone Number--典型的dfs，加上再减去，维持一个当前结果
+18. 4Sum--基本思路还是两指针，但是要注意剪枝!!!另外还要注意去重。
+19. Remove Nth Node From End of List--仔细
+20. Valid Parentheses--注意检查是否为空
