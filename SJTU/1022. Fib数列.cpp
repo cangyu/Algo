@@ -1,7 +1,7 @@
-//�þ���ĸ�ʽ����ʾ,�������
-//����˷��㷨��֤��
-//�ö��ַ������پ���ļ���,�����֣�һ���ǵݹ飬 ��һ���ǻ��ڶ��������ݵķǵݹ鷽��(����)
-//�����Ĭ�ϳ�����32λ�ģ��Գ������д���32������λ���������⣬������ע���ڴ�����ʱ����������Ҫ��ǰ������1ת��Ϊu64
+//用矩阵的格式来表示,简洁明了
+//带余乘方算法的证明
+//用二分法来加速矩阵的计算,有两种，一种是递归， 另一种是基于二进制求幂的非递归方法(本例)
+//计算机默认常量是32位的，对常量进行大于32的左移位运算会出问题，若不加注意在大数的时候会出错，需要提前将常量1转化为u64
 
 #include <iostream>
 #include <cmath>
@@ -19,11 +19,11 @@ int main(int argc, char ** argv)
 {
 	u64 n;
 	cin >> n;
-	const int xferMatrix[LEVEL][LEVEL] = { { 0, 1 }, { 1, 1 } }; //ת������
-	int ans[LEVEL][LEVEL] = { { 1, 0 }, { 0, 1 } }; //��ʼ��Ϊ��λ����
+	const int xferMatrix[LEVEL][LEVEL] = { { 0, 1 }, { 1, 1 } }; //转换矩阵
+	int ans[LEVEL][LEVEL] = { { 1, 0 }, { 0, 1 } }; //初始化为单位矩阵
 
 	MatrixMultiply_WithMod(xferMatrix, MOD, n, ans);
-	int ret = ans[1][0]; //��ֵΪ{1��0}={f(-1),f(0)},��ֵ����A^n���õ�{f(n-1),f(n)}
+	int ret = ans[1][0]; //初值为{1，0}={f(-1),f(0)},初值乘以A^n即得到{f(n-1),f(n)}
 
 	cout << ret;
 	//system("pause");
@@ -79,8 +79,8 @@ int MatrixMultiply_WithMod(const int ref[][LEVEL], int mod, u64 times, int res[]
 	return 0;
 }
 
-
-Reference���ǵݹ��㷨
+/*
+Reference：递归算法
 
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -119,3 +119,4 @@ int main()
 	//system("pause");
 	return 0;
 }
+*/
