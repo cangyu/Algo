@@ -1,6 +1,10 @@
 //Deeper thoughts
 10--dp处理匹配，好！
 18--do it with dfs to handle k-sum?
+22--recursion，nice！
+24--pointer to pointer
+25--虽然过程类似，但递归也是个不错的方法/也用二级指针试试？
+
 
 //Notes
 1. Two Sum--注意顺序，防止a=b的情况，用hash来找counterpart
@@ -23,3 +27,8 @@
 18. 4Sum--基本思路还是两指针，但是要注意剪枝!!!另外还要注意去重。
 19. Remove Nth Node From End of List--仔细
 20. Valid Parentheses--注意检查是否为空
+21. Merge Two Sorted Lists--和归并排序一样的写法，自动包含了所有的corner case
+22. Generate Parentheses--多路dfs，在每个位置根据剩余的量分配左括号或右括号
+23. Merge k Sorted Lists--用priority_queue来优化
+24. Swap Nodes in Pairs--二级指针！好！
+25. Reverse Nodes in k-Group--推广，一般化的想法是逐步反转K个节点
