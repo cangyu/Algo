@@ -5,6 +5,7 @@
 24--pointer to pointer
 25--虽然过程类似，但递归也是个不错的方法/也用二级指针试试？
 26--利用不对称区间的性质！
+27--在同一序列上也可以同时进行两个不同的操作顺序，只要两者速度不同不导致重叠即可
 
 //Notes
 1. Two Sum--注意顺序，防止a=b的情况，用hash来找counterpart
@@ -33,3 +34,4 @@
 24. Swap Nodes in Pairs--二级指针！好！
 25. Reverse Nodes in k-Group--推广，一般化的想法是逐步反转K个节点
 26. Remove Duplicates from Sorted Array--从反面想，计数重复的，利用不对称区间的性质，好！不要用傻逼的erase
+27. Remove Element--将两种操作序列分开！
