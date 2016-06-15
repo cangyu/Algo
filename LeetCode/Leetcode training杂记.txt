@@ -35,3 +35,4 @@
 25. Reverse Nodes in k-Group--推广，一般化的想法是逐步反转K个节点
 26. Remove Duplicates from Sorted Array--从反面想，计数重复的，利用不对称区间的性质，好！不要用傻逼的erase
 27. Remove Element--将两种操作序列分开！
+28. Implement strStr()--KMP,brute-force is trival,注意next[k-1]的意义及两重等效意义
