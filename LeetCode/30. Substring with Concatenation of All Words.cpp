@@ -3,46 +3,54 @@ class Solution
 public:
     vector<int> findSubstring(string s, vector<string>& words) 
     {
-        int wordLen=words[0].length();
-        int totalLen=wordLen*words.size();
-        vector<int> pos,ans;
-        
+        vector<int> ans;
+        if(s.length()==0 || words.empty())
+            return ans;
+            
         unordered_map<string,int> dict;
-        for(auto v : words)
-        {
-            if(dict.find(v)==dict.end())
-                dict[v]=0;
-            else
-                dict[v]++;
-        }
-        
-        for(int i=0;i+wordLen<=s.length();i++)
-            if(dict.find(s.substr(i,wordLen))!=dict.end())
-                pos.push_back(i);
-        
-        sort(pos.begin(),pos.end());
-        
-        for(auto start : pos)
-        {
-            if(start+totalLen>s.length())
-                break;
+        for(auto w : words)
+            dict[w]++;
             
-            unordered_map<string,int> m(dict);
-            
-            bool ok=true;
-            for(int k=0;k<words.size();k++)
+        const int wordLen=words[0].length();
+        for(int i=0;i<wordLen;i++)
+        {
+            int left=i,validCnt=0;
+            unordered_map<string,int> cur_dict;
+            for(int j=i;j+wordLen<=s.length();j+=wordLen)
             {
-                string t=s.substr(start+k*wordLen,wordLen);
-                if(m.find(t)==m.end() || m[t]<0)
+                string curWord=s.substr(j,wordLen);
+                if(dict.find(curWord)==dict.end())
                 {
-                    ok=false;
-                    break;
+                    cur_dict.clear();
+                    validCnt=0;
+                    left=j+wordLen;
                 }
                 else
-                    m[t]--;
+                {
+                    cur_dict[curWord]++;
+                    if(cur_dict[curWord]<=dict[curWord])
+                        validCnt++;
+                    else
+                    {
+                        while(cur_dict[curWord]>dict[curWord])
+                        {
+                            string headWord=s.substr(left,wordLen);
+                            if(cur_dict[headWord]<=dict[headWord])
+                                validCnt--;
+                            cur_dict[headWord]--;
+                            left+=wordLen;
+                        }
+                    }
+                    
+                    if(validCnt==words.size())
+                    {
+                        ans.push_back(left);
+                        cur_dict[s.substr(left,wordLen)]--;
+                        validCnt--;
+                        left+=wordLen;
+                    }
+                }
             }
-            if(ok)
-                ans.push_back(start);
         }
         
         return ans;
