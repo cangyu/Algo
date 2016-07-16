@@ -16,8 +16,11 @@ private:
     void dfs(int target,const vector<int> &candidate,int start, vector<vector<int>> &ans,vector<int> &curAns)
     {
         if(target==0)
+        {
             ans.push_back(curAns);
-        
+            return;
+        }
+		
         int i=start;
         while(i<candidate.size() && target>=candidate[i])//下一步的dfs从当前序号开始，避免和前面已经走过的产生交叉从而重复
         {
