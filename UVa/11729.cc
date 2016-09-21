@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 		{
 			tB += v[i].B;
 			tJ = tB + v[i].J;
-			total = max(total, tJ);//任务可以同时进行，看清题目
+			total = max(total, tJ);//任务可以同时进行，要看清题目
 		}
 
 		printf("Case %d: %d\n", cnt, total);
