@@ -5,22 +5,30 @@
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
+#include <cassert>
 
 using namespace std;
 
+//#define USE_BASIC_SELECT
+#define USE_RANDOM_SELECT
+//#define USE_LINEAR_SELECT
+
 /* 按快排的思想在线性期望时间内选到第k大的元素 */
 template<typename T>
-T random_select(vector<T> &a, int left, int right, int k) //[,)，不做防御检查
+T random_select(vector<T> &a, int left, int right, int k) //[,)
 {
-	if (left+1 == right) //递归终结case：区间中只有1个元素
-		return a[left];
+	assert(left >= 0);
+	assert(left < right);
+	assert(k >= 1 && k <= (right - left));
 
 	int mid = random_partition(a, left, right);
 	int leftCnt = mid - left + 1;
-	if (k <= leftCnt)
-		return random_select(a, left, mid + 1, k);
-	else
+	if (k < leftCnt)
+		return random_select(a, left, mid, k);
+	else if (k > leftCnt)
 		return random_select(a, mid + 1, right, k - leftCnt);
+	else
+		return a[mid];
 }
 
 template<typename T>
@@ -117,8 +125,6 @@ T select(vector<T> &a, int left, int right, int k)
 }
 
 /* Solve */
-const int N = 1000000 + 5;
-
 int main(int argc, char **argv)
 {
 	ios::sync_with_stdio(false);
@@ -143,14 +149,17 @@ int main(int argc, char **argv)
 		for (int i = 1; i < n; i++)
 			C[i] -= i*M;
 
-		/*
-		sort(C.begin(), C.end());//先排序在取中位数，最简单
+#ifdef USE_BASIC_SELECT
+		sort(C.begin(), C.end());//先排序再取中位数，最简单
 		long long x0 = C[n / 2];
-		*/
-
-		//long long x0 = select(C, 0, n, n / 2);//线性时间选择中位数
-
-		long long x0 = random_select(C, 0, n, n / 2);
+#elif defined USE_RANDOM_SELECT
+		long long x0 = random_select(C, 0, n, n / 2);//随机选择pivot来划分
+#elif defined USE_LINEAR_SELECT
+		long long x0 = select(C, 0, n, n / 2);//线性时间选择中位数
+#else
+		printf("Please specify selection method!\n");
+		return(-1);
+#endif
 
 		long long ans = 0;
 		for (int i = 0; i < n; i++)
