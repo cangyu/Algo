@@ -6,12 +6,12 @@
 #include <ctime>
 #include <cmath>
 #include <cassert>
+#include <cstring>
 
 using namespace std;
 
 const int N = 10;
-int n, x, y, z, ans;
-bool finish = true;
+int n, x, y, z;
 char cube[N][N][N];
 char view[6][N][N];//前，左，后，右，上，下
 
@@ -51,8 +51,8 @@ void calc_coordinate(int k, int i, int j, int w)
 		z = n - 1 - i;
 		break;
 	case 4:
-		x = i;
-		y = n - 1 - j;
+		x = j;
+		y = n - 1 - i;
 		z = n - 1 - w;
 		break;
 	case 5:
@@ -74,11 +74,12 @@ int main(int argc, char **argv)
 			for (int k = 0; k < 6; k++)
 				for (int j = 0; j < n; j++)
 					view[k][i][j] = get_symbol();
+
 		memset(cube, '#', N*N*N);
 
 		//去掉视线能贯穿的立方体
-		for(int k=0;k<6;k++)
-			for(int i=0;i<n;i++)
+		for (int k = 0; k < 6; k++)
+			for (int i = 0; i < n; i++)
 				for (int j = 0; j < n; j++)
 					if (view[k][i][j] == '.')
 						for (int w = 0; w < n; w++)
@@ -90,11 +91,11 @@ int main(int argc, char **argv)
 		//去掉不符合视图描述的立方体
 		for (;;)
 		{
-			finish = true;
-			for (int k = 0; k<6; k++)
-				for (int i = 0; i<n; i++)
+			bool finish = true;
+			for (int k = 0; k < 6; k++)
+				for (int i = 0; i < n; i++)
 					for (int j = 0; j < n; j++)
-						if (view[k][i][j] == '.')
+						if (view[k][i][j] != '.')
 							for (int w = 0; w < n; w++)
 							{
 								calc_coordinate(k, i, j, w);
@@ -119,7 +120,7 @@ int main(int argc, char **argv)
 		}
 
 		//Result
-		ans = 0;
+		int ans = 0;
 		for (int i = 0; i < n; i++)
 			for (int j = 0; j < n; j++)
 				for (int k = 0; k < n; k++)
