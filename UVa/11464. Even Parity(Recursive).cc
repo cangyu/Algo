@@ -6,6 +6,7 @@
 #include <ctime>
 #include <cmath>
 #include <cassert>
+#include <cstring>
 
 using namespace std;
 
@@ -20,6 +21,8 @@ int count(int cur);
 
 int main(int argc, char **argv)
 {
+	ios::sync_with_stdio(false);
+
 	cin >> T;
 	for (int k = 0; k < T; ++k)
 	{
@@ -28,7 +31,7 @@ int main(int argc, char **argv)
 			for (int j = 0; j < n; j++)
 				cin >> mat1[i][j];
 
-		cout << check(0, 0) << endl;
+		cout << "Case " << k + 1 << ": " << check(0, 0) << endl;
 	}
 	return 0;
 }
@@ -59,7 +62,7 @@ int check(int w, int cnt)
 int count(int cur)
 {
 	memcpy(mat2, mat1, sizeof(mat1));
-	for(int i=0;i<n-1;i++)
+	for (int i = 0; i < n - 1; i++)
 		for (int j = 0; j < n; j++)
 		{
 			int ti = i + di[3], tj = j + dj[3];
