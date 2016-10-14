@@ -9,11 +9,11 @@
 #include <set>
 #include <map>
 #include <string>
+#include <cstring>
 
 using namespace std;
 
 const int N = 4;
-const int primes[] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 };
 int view[24][7], color[N][7], pose[N][7];
 int n = 0;
 
@@ -25,14 +25,14 @@ int count(void);
 
 int main(int argc, char **argv)
 {
-	init_view();
+	ios::sync_with_stdio(false);
+
+	init_view();//生成24种可能的姿态
 
 	while (cin>>n && n != 0)
 	{
 		int color_cnt = 0;
 		map<string, int> c;
-		
-		//用质数来表示颜色
 		for (int i = 0; i < n; i++)
 		{
 			for (int j = 1; j < 7; j++)
@@ -41,8 +41,8 @@ int main(int argc, char **argv)
 				cin >> cur_color;
 				if (c.find(cur_color) == c.end())
 				{
-					c[cur_color] = primes[color_cnt];
-					color[i][j] = primes[color_cnt];
+					c[cur_color] = color_cnt;
+					color[i][j] = color_cnt;
 					++color_cnt;
 				}
 				else
@@ -50,7 +50,7 @@ int main(int argc, char **argv)
 			}
 		}
 
-		cout << check(1) << endl;
+		cout << check(0) << endl;//dfs,逐个枚举，注意终止条件
 	}
 
 	return 0;
@@ -73,7 +73,6 @@ void init_view(void)
 	for (int i = 0; i < 4; i++)
 	{
 		rot_up(view[cnt], 1);
-
 		rot_right(view[cnt++], i);
 	}
 
@@ -82,7 +81,6 @@ void init_view(void)
 	{
 		rot_right(view[cnt], 3);
 		rot_up(view[cnt], 1);
-
 		rot_right(view[cnt++], i);
 	}
 
@@ -94,7 +92,6 @@ void init_view(void)
 	for (int i = 0; i < 4; i++)
 	{
 		rot_up(view[cnt], 2);
-
 		rot_right(view[cnt++], i);
 	}
 
@@ -103,7 +100,6 @@ void init_view(void)
 	{
 		rot_right(view[cnt], 1);
 		rot_up(view[cnt], 3);
-
 		rot_right(view[cnt++], i);
 	}
 
@@ -111,7 +107,6 @@ void init_view(void)
 	for (int i = 0; i < 4; i++)
 	{
 		rot_up(view[cnt], 3);
-
 		rot_right(view[cnt++], i);
 	}
 }
@@ -145,14 +140,19 @@ int check(int cur)
 	if (cur == n)
 		return count();
 
-	vector<int> ans(24, 0);
+	int ret = -1;
 	for (int i = 0; i < 24; i++)
 	{
 		memcpy(pose[cur], view[i], sizeof(pose[cur]));
-		ans[i] = check(cur + 1);
+		int curAns = check(cur + 1);
+
+		if (ret == -1)
+			ret = curAns;
+		else if (curAns < ret)
+			ret = curAns;
 	}
-	sort(ans.begin(), ans.end());
-	return ans[0];
+
+	return ret;
 }
 
 int count(void)
@@ -162,7 +162,7 @@ int count(void)
 	for (int face = 1; face <= 6; ++face)
 	{
 		//找到给定视角上最多的颜色
-		int t[100] = { 0 };
+		int t[32] = { 0 };
 		for (int k = 0; k < n; ++k)
 		{
 			int index = pose[k][face];
@@ -170,7 +170,7 @@ int count(void)
 			++t[c];
 		}
 		int max_cnt = t[0];
-		for (int i = 1; i < 100; i++)
+		for (int i = 1; i < 32; i++)
 			if (t[i] > max_cnt)
 				max_cnt = t[i];
 
