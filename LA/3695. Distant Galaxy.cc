@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 			h[i] = pts[i].y;
 		}
 
-		cout <<"Case "<< ++case_cnt << ": "<< solve() << endl;//还有没考虑到的地方？？？？
+		cout <<"Case "<< ++case_cnt << ": "<< solve() << endl;
 	}
 	return 0;
 }
@@ -80,7 +80,7 @@ int solve(void)
 			int tmp = 0;
 			for (int line = 0; line <= line_index; ++line)
 			{
-				ans = max(ans, left_cnt[line] + on2[line] + tmp);
+				ans = max(ans, left_cnt[line] + on2[line] + tmp);//把一个四边形分成不相关联的两部分
 				tmp = max(tmp, on[line] - left_cnt[line]);
 			}
 		}
