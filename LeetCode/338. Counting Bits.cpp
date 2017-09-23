@@ -1,0 +1,13 @@
+//找前面与之最相近的一个
+class Solution
+{
+public:
+    vector<int> countBits(int num)
+    {
+        vector<int> dp = vector<int>(num+1, 0);
+        for(int i=1;i<=num;i++)
+            dp[i] = dp[i&(i-1)] +1;
+        
+        return dp;
+    }
+};
