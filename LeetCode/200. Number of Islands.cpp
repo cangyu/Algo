@@ -3,36 +3,35 @@ class Solution
 public:
     int numIslands(vector<vector<char>>& grid) 
     {
-        if(grid.empty())
-            return 0;
-        const int m=grid.size();
-        const int n=grid[0].size();
-        int cnt=0;
-        for(int i=0;i<m;++i)
-        {
-            for(int j=0;j<n;++j)
-            {
-                if(dfsDetector(i,j,m,n,grid))
-                  ++cnt;  
-            }
-        }
-        return cnt;
+        int ans = 0;
+        if(grid.size()==0)
+            return ans;
+        
+        int m = grid.size();
+        int n = grid[0].size();
+        
+        for(int i=0;i<m;i++)
+            for(int j=0;j<n;j++)
+                if(grid[i][j]=='1')
+                {
+                    ++ans;
+                    dfs(i, j, grid);
+                }
+        
+        return ans;
     }
-private:
-    bool dfsDetector(int i,int j,const int &m,const int &n,vector<vector<char>> &grid)
+    
+    int di[4]={0, 0, 1, -1};
+    int dj[4]={1, -1, 0, 0};
+    
+    void dfs(int i, int j, vector<vector<char>> &grid)
     {
-        const static vector<vector<int>> dir={{0,1},{0,-1},{1,0},{-1,0}};
-        const int dirCnt=dir.size();
-        if(i<0 || i>=m || j<0 || j>=n)
-            return false;
-        if(grid[i][j]=='1')
-        {
-            grid[i][j]='2';
-            for(int k=0;k<dirCnt;++k)
-                dfsDetector(i+dir[k][0],j+dir[k][1],m,n,grid);
-            return true;
-        }
-        else
-            return false;
+        if(i<0||i>=grid.size()||j<0||j>=grid[0].size()||grid[i][j]!='1')
+            return;
+        
+        grid[i][j]='0';
+        
+        for(int k=0;k<4;k++)
+            dfs(i+di[k], j+dj[k], grid);
     }
 };
